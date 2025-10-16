@@ -1,0 +1,278 @@
+# -- 数据配置 --
+# 用户数据存储的根目录
+dataRoot: ./data
+# -- 服务器配置 --
+# 监听传入连接
+listen: true
+# 在指定地址上监听，支持 IPv4 和 IPv6
+listenAddress:
+  ipv4: 0.0.0.0
+  ipv6: '[::]'
+# 启用 IPv6 和/或 IPv4 协议。必须至少启用一个！
+# - 使用 "auto" 选项自动检测支持
+# - 使用 true 或 false (不带引号) 来启用或禁用每个协议
+protocol:
+    ipv4: true
+    ipv6: false
+# DNS优先使用IPv6。在IPv6没有问题的ISP上启用此选项
+dnsPreferIPv6: false
+# -- 浏览器启动配置 --
+browserLaunch:
+  # 服务器启动时自动打开浏览器。
+  enabled: false
+  # 用于打开URL的浏览器。
+  # 安卓设备不支持。
+  # - 使用 "default" 来使用系统默认浏览器
+  # - 使用 "firefox", "chrome", "edge"
+  browser: 'default'
+  # 覆盖在浏览器中打开的主机名。
+  # - 使用 "auto" 让服务器决定
+  # - 使用 'localhost', 'st.example.com' 等选项
+  hostname: 'auto'
+  # 覆盖在浏览器中运行的端口。
+  # - 使用 -1 来使用服务器端口。
+  # - 指定一个端口来覆盖默认值。
+  port: -1
+  # 在自动模式下避免使用 'localhost' 作为主机名。
+  # 如果你的 hosts 文件中没有 'localhost'，请使用此选项
+  avoidLocalhost: false
+# 服务器端口
+port: 8000
+# -- SSL 选项 --
+ssl:
+  # 启用 SSL/TLS 加密
+  enabled: false
+  # 证书路径 (相对于服务器根目录)
+  certPath: "./certs/cert.pem"
+  # 私钥路径 (相对于服务器根目录)
+  keyPath: "./certs/privkey.pem"
+  # 私钥密码 (如果不需要，请留空)
+  # 为了更好的安全性，请使用命令行参数或环境变量 (SILLYTAVERN_SSL_KEYPASSPHRASE)
+  keyPassphrase: ""
+# -- 安全配置 --
+# 切换白名单模式
+whitelistMode: true
+# 白名单还将验证 X-Forwarded-For / X-Real-IP 头中的 IP
+enableForwardedWhitelist: true
+# 允许的 IP 地址白名单
+whitelist:
+  - ::1
+  - 127.0.0.1
+  - 172.21.0.1
+  - 10.0.0.0/24
+  - 10.8.0.0/24
+# 自动将 Docker 主机和网关 IP 加入白名单
+whitelistDockerHosts: true
+# 为端点切换基本身份验证
+basicAuthMode: false
+# 基本身份验证凭据
+basicAuthUser:
+  username: "user"
+  password: "password"
+# 启用 CORS 代理中间件
+enableCorsProxy: false
+# -- 请求代理配置 --
+requestProxy:
+  # 如果启用代理，所有传出的 HTTP/HTTPS 请求都将通过它路由。
+  enabled: false
+  # 代理 URL。可用协议: http, https, socks, socks5, socks4, pac
+  url: "socks5://username:password@example.com:1080"
+  # 代理绕过列表。对这些主机的请求将不会通过代理路由。
+  bypass:
+    - localhost
+    - 127.0.0.1
+# 启用多用户模式
+enableUserAccounts: true
+# 启用谨慎登录模式：在登录屏幕上隐藏用户列表
+enableDiscreetLogin: true
+# 启用基于 Authelia 的自动登录。仅当您已在反向代理上设置并安装了 Authelia 作为中间件时才启用此功能
+# https://www.authelia.com/
+# 这将使用与 Authelia 相同的用户名自动登录到一个帐户。（请确保 Authelia 中的用户名与 SillyTavern 中的用户名（小写）完全匹配）
+autheliaAuth: true
+# 如果 `basicAuthMode` 和此项都已启用，则基本身份验证的用户名和密码与单个帐户的用户名和密码相同
+perUserBasicAuth: false
+# 主机白名单配置。如果您正在使用监听模式，建议配置
+hostWhitelist:
+  # 启用或禁用主机白名单
+  enabled: false
+  # 扫描传入的请求以检测潜在的主机头欺骗
+  scan: true
+  # 允许的主机列表。不要包含 localhost 或 IP，这些是安全的。
+  # 使用点号创建子域模式。
+  # 示例:
+  # - example.com
+  # - .trycloudflare.com
+  hosts: []
+
+# 用户会话超时时间 *以秒为单位* (默认为 24 小时)。
+## 设置为正数，在一段时间不活动后会话过期
+## 设置为 0，在浏览器关闭时会话过期
+## 设置为负数，禁用会话过期
+sessionTimeout: -1
+# 禁用 CSRF 保护 - 不推荐
+disableCsrfProtection: false
+# 禁用启动安全检查 - 不推荐
+securityOverride: false
+# -- 日志配置 --
+logging:
+  # 启用访问日志记录到 access.log 文件和控制台输出
+  # 记录新连接的时间戳、IP 地址和用户代理
+  enableAccessLog: true
+  # 在终端中显示的最低日志级别 (DEBUG = 0, INFO = 1, WARN = 2, ERROR = 3)
+  minLogLevel: 0
+# -- 速率限制配置 --
+rateLimiting:
+  # 使用 X-Real-IP 头代替套接字 IP 进行速率限制
+  # 仅当您使用正确配置的反向代理（如 Nginx/traefik/Caddy）时才启用此选项
+  preferRealIpHeader: false
+
+## 备份配置
+backups:
+  # 所有备份类型的通用设置
+  common:
+    # 每个聊天和设置文件要保留的备份数量
+    numberOfBackups: 50
+  chat:
+    # 启用自动聊天备份
+    enabled: true
+    # 保存前验证聊天文件的完整性
+    checkIntegrity: true
+    # 每个用户保留的最大聊天备份数（从最近的开始）。设置为 -1 以保留所有备份。
+    maxTotalBackups: -1
+    # 每个用户聊天备份的节流间隔（毫秒）
+    throttleInterval: 10000
+
+# 缩略图配置
+thumbnails:
+  # 启用缩略图生成
+  enabled: true
+  # 头像缩略图的图像格式：
+  # * "jpg": 最佳压缩，质量可调，无透明度
+  # * "png": 保留透明度，但文件大小增加约 100%
+  # 更改此项仅影响新缩略图。要重新创建旧的，请清除用户数据中的 /thumbnails 文件夹。
+  format: "jpg"
+  # JPG 缩略图质量 (0-100)
+  quality: 95
+  # 每种类型的最大缩略图尺寸 [宽度, 高度]
+  dimensions: { 'bg': [160, 90], 'avatar': [96, 144], 'persona': [96, 144] }
+
+# 性能相关配置
+performance:
+  # 启用角色卡的延迟加载。可提高拥有大量角色卡库时的性能。
+  # 可能与某些扩展存在兼容性问题。
+  lazyLoadCharacters: false
+  # 已解析的角色卡可以使用的最大内存量。设置为 0 以禁用内存缓存。
+  memoryCacheCapacity: '100mb'
+  # 启用角色卡的磁盘缓存。可提高拥有大量角色卡库时的性能。
+  useDiskCache: true
+
+# 缓存清除配置
+# 重要提示：需要 localhost 或带有 HTTPS 的域，否则将无法工作！
+cacheBuster:
+  # 首次加载或上传图像文件后清除浏览器缓存
+  enabled: false
+  # 仅为指定的用户代理正则表达式模式清除缓存
+  # 示例: 'firefox|safari' (不区分大小写)
+  userAgentPattern: ''
+
+# 允许通过 API 暴露密钥
+allowKeysExposure: false
+# 跳过新的默认内容检查
+skipContentCheck: false
+# 允许下载角色卡的主机
+whitelistImportDomains:
+  - localhost
+  - cdn.discordapp.com
+  - files.catbox.moe
+  - raw.githubusercontent.com
+  - char-archive.evulid.cc
+# API 请求覆盖 (适用于 KoboldAI 和文本补全 API)
+## 注意：如果端口不是默认的 (80 或 443)，则主机包含端口号
+## 格式是一个对象数组:
+## - hosts:
+##   - example.com
+##   headers:
+##     Content-Type: application/json
+##   - 127.0.0.1:5001
+##   headers:
+##     User-Agent: "Googlebot/2.1 (+http://www.google.com/bot.html)"
+requestOverrides: []
+
+# 扩展配置
+extensions:
+  # 启用 UI 扩展
+  enabled: true
+  # 当发布版本更改时自动更新扩展
+  autoUpdate: true
+  models:
+    # 启用从 HuggingFace 自动下载模型
+    autoDownload: true
+    # 扩展的附加模型。需要 HuggingFace 模型中心的 ONNX 格式模型 ID
+    classification: Cohee/distilbert-base-uncased-go-emotions-onnx
+    captioning: Xenova/vit-gpt2-image-captioning
+    embedding: Cohee/jina-embeddings-v2-base-en
+    speechToText: Xenova/whisper-small
+    textToSpeech: Xenova/speecht5_tts
+
+# 可以在需要时下载额外的模型分词器。
+# 禁用将回退到另一个本地可用的分词器。
+enableDownloadableTokenizers: true
+# -- OPENAI 配置 --
+# 在严格提示后处理模式下，当提示不以用户消息开头时使用的占位符消息
+promptPlaceholder: "[Start a new chat]"
+openai:
+  # 将向 OpenAI 补全 API 发送一个随机的用户 ID
+  randomizeUserId: false
+  # 如果不为空，将此作为系统消息添加到每个图像描述补全提示的开头
+  # 示例: "Perform the instructions to the best of your ability.\n" (用于 LLaVA)
+  # 在图像内联模式下不使用
+  captionSystemPrompt: ""
+# -- DEEPL 翻译配置 --
+deepl:
+  # 可用选项: default, more, less, prefer_more, prefer_less
+  formality: default
+# -- MISTRAL API 配置 --
+mistral:
+  # 启用用提示中的最后一条助手消息预填充回复
+  # 注意：前缀会被回显到补全结果中。您可能需要使用正则表达式将其剔除。
+  enablePrefix: false
+# -- OLLAMA API 配置 --
+ollama:
+  # 控制请求后模型在内存中保持加载的时间
+  # * -1: 模型无限期加载
+  # * 0: 请求后立即卸载模型
+  # * N (任何正数): 请求后模型保持加载 N 秒。
+  keepAlive: -1
+  # 控制生成请求的 "num_batch" (批处理大小) 参数
+  # * -1: 使用模型的默认值
+  # * N (正数): 使用指定的值。必须是 2 的幂，例如 128, 256, 512 等。
+  batchSize: -1
+# -- ANTHROPIC CLAUDE API 配置 --
+claude:
+  # 启用系统提示缓存（如果支持）。
+  # https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching
+  # -- 重要！ --
+  # 仅当聊天记录之前的提示是静态的并且在请求之间不会改变时才使用
+  # （例如 {{random}} 宏或不是作为聊天内注入的知识库）。
+  # 否则，你只会在缓存未命中上浪费钱。
+  enableSystemPromptCache: false
+  # 启用深度消息历史记录缓存（如果支持）。
+  # https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching
+  # -- 重要！ --
+  # 请谨慎使用。行为可能是不可预测的，我们不能也无法做出任何保证。
+  # 设置为一个整数来指定所需的深度。0（不包括预填充）
+  # 对于大多数用例来说应该是理想的。
+  # 任何非负整数以外的值都将被忽略，并且深度缓存将不会被启用。
+  cachingAtDepth: -1
+  # 使用 1 小时的 TTL（生存时间）而不是默认的 5 分钟。
+  ## 5分钟: 基础价格 x 1.25
+  ## 1小时: 基础价格 x 2
+  extendedTTL: false
+# -- GOOGLE GEMINI API 配置 --
+gemini:
+  # API 端点版本 ("v1beta" 或 "v1alpha")
+  apiVersion: 'v1beta'
+# -- 服务器插件配置 --
+enableServerPlugins: false
+# 尝试在启动时自动更新服务器插件
+enableServerPluginsAutoUpdate: true
