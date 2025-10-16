@@ -1,0 +1,9 @@
+[submodule "extensions/Extension-LaTeX"]
+	path = extensions/Extension-LaTeX
+	url = https://github.com/SillyTavern/Extension-LaTeX
+[submodule "extensions/Information-bar-integration-tool"]
+	path = extensions/Information-bar-integration-tool
+	url = https://github.com/loveyouguhan/Information-bar-integration-tool
+[submodule "extensions/JS-Slash-Runner"]
+	path = extensions/JS-Slash-Runner
+	url = https://github.com/N0VI028/JS-Slash-Runner
